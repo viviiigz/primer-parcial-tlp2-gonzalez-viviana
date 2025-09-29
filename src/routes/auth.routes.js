@@ -6,6 +6,8 @@ import {
   register,
 } from "../controllers/auth.controller.js";
 
+import {authMiddleware} from "../middlewares/auth.middleware.js"
+
 export const authRoutes = Router();
 
 // TODO: proteger las rutas con middlewares de autenticación y autorización faltantes (si fuera necesario)
