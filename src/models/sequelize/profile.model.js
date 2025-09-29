@@ -15,3 +15,19 @@ export const ProfileModel = sequelize.define("Profile", {
 // * 1:1 Profile ↔ User
 // * 'profile' (User) y 'user' (Profile)
 // ! FALTA COMPLETAR ACA
+
+Profile.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+  onDelete: "CASCADE",
+});
+
+User.addHook("afterDestroy", async (user) => {
+  const profile = await ProfileModel.findOne({
+    where: { user_id: user.dataValues.id },
+  });
+  if (profile) {
+    await profile.destroy();
+  }
+});
+User.hasOne(ProfileModel, { foreignKey: "user_id", as: "profile" });

@@ -13,8 +13,22 @@ const CategorySchema = new Schema(
     },
     description: { type: String, maxlength: 500 },
   },
-  { timestamps: true }
+    {
+    timestamps: true,
+    versionKey: false,
+    toJSON: { virtuals: true }, 
+    toObject: { virtuals: true },
+    id:false //para desactivar el id q muestra el virtual
+  }
 );
+
+// Esto permite usar assetModel.findById(id).populate('asset')
+CategorySchema.virtual('assets', {
+  ref: 'AssetModel', 
+  localField: '_id',   
+  foreignField: 'categories', 
+  justOne: false // indica que puede haber muchos artículos asociados
+});
 
 // ! FALTA COMPLETAR ACA
 

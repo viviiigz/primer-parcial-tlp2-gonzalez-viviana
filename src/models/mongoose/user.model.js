@@ -18,11 +18,51 @@ const UserSchema = new Schema(
       enum: ["secretary", "administrator"],
       default: "secretary",
     },
-    deletedAt: { type: Date, default: null },
+    profile: {
+      employee_number: {
+        type: String,
+        unique: true,
+        required: true,
+      },
+      first_name: {
+        type: String,
+        required: true,
+        minlength: 2,
+        maxLength: 50,
+      },
+      last_name: {
+        type: String,
+        required: true,
+        minlength: 2,
+        maxLength: 50,
+      },
+      phone: {
+        type: String,
+      },
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
     // ! FALTA COMPLETAR ACA
   },
-  { timestamps: true }
+   {
+    timestamps: true,
+    versionKey: false,
+    toJSON: { virtuals: true }, 
+    toObject: { virtuals: true },
+    id:false //para desactivar el id q muestra el virtual
+
+  }
+
 );
+
+UserSchema.virtual("assets", {
+  ref: "AssetModel",
+  localField: "_id",
+  foreignField: "responsible",
+  justOne: false,
+});
 
 // ! FALTA COMPLETAR ACA
 
