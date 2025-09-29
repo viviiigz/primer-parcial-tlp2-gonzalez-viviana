@@ -1,8 +1,7 @@
 import { validationResult } from "express-validator";
-import { signToken, verifyToken } from "../helpers/jwt.helper.js";
+import { signToken } from "../helpers/jwt.helper.js";
 import { hashPassword, comparePassword } from "../helpers/bcrypt.helper.js";
-import UserModel from "../models/mongoose/user.model.js";
-
+import { UserModel } from "../models/mongoose/user.model.js";
 export const register = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -38,26 +37,26 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
     const user = await UserModel.findOne({
-      username: username,
+      email: email,
     });
     console.log(user);
     if (!user) {
       return res.status(404).json({
-        msg: "El usuario o la contraseña no coinciden",
+        msg: "El email o la contraseña no coinciden",
       });
     }
 
-    const isMatch = await comparePasswords(password, user.password);
+    const isMatch = await comparePassword(password, user.password);
     if (!isMatch) {
       return res.status(404).json({
         msg: "El usuario o la contraseña no coinciden",
       });
     }
-    const token = generateToken({
+    const token = signToken({
       id: user._id,
       role: user.role,
     });
