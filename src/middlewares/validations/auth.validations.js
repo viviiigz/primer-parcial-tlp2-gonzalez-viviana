@@ -36,5 +36,16 @@ export const registerValidation = [
 ];
 
 export const loginValidation = [
+   // Validar el email
+  body('email')
+    .trim()
+    .notEmpty().withMessage('El email es obligatorio')
+    .isEmail().withMessage('El formato del email no es válido')
+    .normalizeEmail(),
+
+  // Validar la contraseña
+  body('password')
+    .notEmpty().withMessage('La contraseña es obligatoria')
+
   // TODO: completar las validaciones para el login
 ];
